@@ -11,7 +11,8 @@ const HospitalSchema = Schema({
     usuario: {
         //así se hace relación
         type: Schema.Types.ObjectId,
-        ref:"Usuario"
+        ref:"Usuario",
+        required:true
     }
 },{collection:"hospitales"});
 UsuarioSchema.method("toJSON", function(){

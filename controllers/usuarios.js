@@ -73,11 +73,33 @@ const revalidarToken= async(req,res) => {
     });
 }
 const getUsuarios=(req,res=response)=>{
-    const usuarios = usuario.find();
-    return res.status(200).json({
-        ok:true,
-        usuarios
-    })
+    try{
+        const desde =Number(req.query.desde) || 0;
+        // const usuarios = usuario.find({},"nombre email role google").skip(desde).limit(5);
+        // const total = await Usuario.count();
+       const {usuarios,total}= await Promise.all([
+            Usuario.find({},"nombre email role google").skip(desde).limit(5),
+            Usuario.count()
+        ]);
+        if(usuarios){
+            return res.status(200).json({
+                ok:true,
+                usuarios,
+                total
+            });
+            
+        }else{
+            return res.status(404).json({
+                ok:false,
+                msg:"Not found"
+            });
+
+        }
+        
+    }catch(e){
+        console.log(e);
+        return res.status(500).json({ok:false,msg:'Error interno del servidor'})
+    }
 }
 const actualizarUsuario= async(req,res=response) =>{
     try{

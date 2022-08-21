@@ -11,12 +11,14 @@ const MedicoSchema = Schema({
     hospital: {
         //así se hace relación
         type: Schema.Types.ObjectId,
-        ref:"Hospital"
+        ref:"Hospital",
+        required:true
     },
     usuario: {
         //así se hace relación
         type: Schema.Types.ObjectId,
-        ref:"usuario"
+        ref:"usuario",
+        required:true
     }
     
 },{collection:"medicos"});
