@@ -79,10 +79,57 @@ const getUsuarios=(req,res=response)=>{
         usuarios
     })
 }
+const actualizarUsuario= async(req,res=response) =>{
+    try{
+        const uid = req.params.id;
+        const usuario_db = Usuario.findById(uid);
+        if(!usuario_db){
+            return res.status(404).json({ok:false,msg:"No existe usuario por ese uid."});
+        }
+        //Actualizaciones
+        const {password,google,email,...campos} = req.body;
+        if(usuario_db.email===email){
+            delete campos.email;
+        }else{
+            const existeEmail = await Usuario.findOne({email});
+            if(existeEmail){
+                return res.status(400).json({ok:false,msg:"Ya existe usuario con ese email"});
+            }
+        }
+        campos.email=email;
+        const userUpdate = await Usuario.findByIdAndUpdate(uid,campos,{new:true});
+
+        res.status(200).json({ok:true,userUpdate})
+    }catch(e){
+        console.log(e);
+        return res.status(500).json({ok:false,msg:'Error interno del servidor'})
+        
+    }
+}
+
+const BorrarUsuario = async (req,res=response) =>{
+    try{
+        const uid = req.params.id;
+        const usuario_db = Usuario.findById(uid);
+        if(!usuario_db){
+            return res.status(404).json({ok:false,msg:"No existe usuario por ese uid."});
+        }else{
+            await Usuario.findByIdAndDelete(uid);
+            res.status(200).json({ok:true,msg:"usuario eliminado."});
+        }
+        
+    }catch(e){
+        console.log(e);
+        return res.status(500).json({ok:false,msg:'Error interno del servidor'})
+
+    }
+}
 
 module.exports={
     CrearUsuario,
     loginUsuario,
+    actualizarUsuario,
+    BorrarUsuario,
     revalidarToken,
     getUsuarios
 }
