@@ -6,6 +6,7 @@ const cors = require("cors");
 const app = express();
 //Configurar cors
 app.use(cors());
+app.use(express.json());
 //database
 db_connection();
 //especificar rutas hijas/padre
